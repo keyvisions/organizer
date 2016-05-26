@@ -10,11 +10,9 @@ const Path = require('path');
 const DBC = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
-const Hostname = '127.0.0.1';
-const Port = 8080;
-
+// To setup mongodb on a Cloud9 workspace see https://community.c9.io/t/setting-up-mongodb/1717
 // mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
-const dburl = 'mongodb://localhost:27017/test';
+const dburl = 'mongodb://' + process.env.IP + ':28017/organized';
 
 const mime = {
     '.htm': 'text/html',
@@ -131,5 +129,5 @@ HTTP.createServer(function(req, res) {
         res.end(data);
     });
   }
-}).listen(Port, Hostname);
-log('Server running at http://' + Hostname + ':' + Port + '/', true);
+}).listen(process.env.PORT, process.env.IP);
+log((new Date()).toString() + ': Webbase server running at ' + process.env.IP + ':' + process.env.PORT, true);
