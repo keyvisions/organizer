@@ -1,0 +1,61 @@
+<div>
+    <h2><i class="fa fa-book"></i> {{people.name}}<i class="fa fa-plus" ng-click="people.create()"></i><i class="fa fa-th-large" ng-click="people.showAs = 'grid'"></i><i class="fa fa-bars" ng-click="people.showAs = 'table'"></i></h2>
+    <div style="text-align:right"><input type="search" ng-model="people_search" placeholder="Cerca"></div>
+    <table class="table table-condensed table-hover" ng-show="people.showAs == 'table'">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="sort">Nome</th>
+                <th class="sort">Telefono</th>
+                <th class="sort">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-type="person" ng-repeat="person in people.data | filter: people_search | orderBy: 'name' track by person._id" draggable="true" ondragstart="drag(event)" id="{{person._id}}">
+                <td style="width:1em"><i class="fa fa-user" ng-click="people.selected = person" ></i></td>
+                <td>{{person.name + ' ' + person.surname}}</td>
+                <td>{{person.phone}}</td>
+                <td><a href="mailto:{{person.email}}">{{person.email}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <ul class="grid" ng-show="people.showAs == 'grid'">
+      <li data-type="person" ng-repeat="person in people.data | filter: people_search | orderBy: 'name' track by person._id" ng-dblclick="people.selected = person" ng-draggable="true" ng-dragstart="person.drag(event)" id="{{person._id}}">
+          <img ng-src="{{person.image || '/media/person.png'}}" alt="{{person.name + ' ' + person.surname}}"><br>
+          {{person.name}}<br>{{person.surname}}
+      </li>
+    </ul>
+
+    <div class="collapse">{{people.selected}}</div>
+    <form class="panel panel-default" ng-show="people.selected" novalidate>
+      <div class="panel-heading"><i class="fa fa-user"></i> {{people.selected.name + ' ' + people.selected.surname}}<i class="fa fa-close" ng-click="people.selected = null"></i></div>
+      <div class="panel-body">
+        <img class="pull-right" ng-src="{{people.selected.image}}" alt="{{people.selected.name + ' ' + people.selected.surname}}">
+        <div>
+          <label>Nome</label><input ng-model="people.selected.name" placeholder="Nome" required><br>
+          <label>Cognome</label><input ng-model="people.selected.surname" placeholder="Cognome" required><br>
+          <label>Sesso</label><input type="radio" ng-model="people.selected.sex" value="M">M <input type="radio" ng-model="people.selected.sex" value="F">F<br>
+          <label>Data di nascita</label><input type="text" ng-model="people.selected.dob" placeholder="aaaa-mm-gg"><br>
+          <label>Codice fiscale</label><input ng-model="people.selected.fc"><br>
+          <label>Email</label><input type="email" ng-model="people.selected.email"><br>
+          <label>Telefono</label><input ng-model="people.selected.phone"><br>
+          <label>Foto</label><input id="person_image" type="file"><br>
+        </div>
+
+        <h3>Indirizzi<i class="fa fa-plus" ng-click="people.create('addresses')"></i></h3>
+        <div ng-repeat="address in people.selected.addresses">
+            <input ng-model="address.street" placeholder="Strada" required />
+            <input ng-model="address.city" placeholder="Città" required />
+            <input ng-model="address.zip" placeholder="CAP" required />
+            <select ng-model="address.province" ng-options="option for option in ['VI', 'VR', 'VE', 'BS', 'TV']" required></select>
+            <input ng-model="address.phone" placeholder="Telefono">
+            <select ng-model="address.type" ng-options="option for option in ['Casa', 'Lavoro']" required></select>
+            <i class="fa fa-minus" ng-click="people.delete('addresses', $index)"></i>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button ng-click="people.update()">Salva</button>
+        <button class="pull-right" ng-click="people.delete()">Elimina</button>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <i class="fa fa-code-fork"></i> {{courses.name}}
+        <div class="pull-right">
+        <i class="fa fa-plus" ng-click="courses.create()"></i><i class="fa fa-th-large" ng-click="courses.showAs = 'grid'"></i><i class="fa fa-bars" ng-click="courses.showAs = 'table'"></i>
+        <input type="search" ng-model="courses_search" placeholder="Cerca">
+      </div>
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed table-hover" ng-show="courses.showAs == 'table'">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="sort">Nome</th>
+                    <th class="sort">Codice</th>
+                    <th class="sort">Crediti</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-type="course" ng-repeat="course in courses.data | filter: courses_search | orderBy: 'code' track by course._id" draggable="true" ondragstart="drag(event)" id="{{course._id}}">
+                    <td style="width:1em"><i ng-class="course.modules.length ? 'fa fa-code-fork' : 'fa fa-circle-thin'" ng-click="courses.selected = course"></i></td>
+                    <td>{{course.name}}</td>
+                    <td>{{course.code}}</td>
+                    <td>{{course.credits}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="grid" ng-show="courses.showAs == 'grid'">
+            <li data-type="course" ng-repeat="course in courses.data | filter: courses_search | orderBy: 'name' track by course._id" ng-dblclick="courses.selected = course" ng-draggable="true" ng-dragstart="course.drag(event)" id="{{course._id}}">
+                <img ng-src="{{course.image || '/media/course.png'}}" alt="{{course.name}}">
+                <br> {{course.name}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+<form class="panel panel-primary" ng-show="courses.selected" novalidate>
+    <div class="panel-heading"><i ng-class="courses.selected.modules.length ? 'fa fa-code-fork' : 'fa fa-circle-thin'"></i> {{courses.selected.name + ' ' + courses.selected.surname}}<i class="fa fa-close" ng-click="courses.selected = null"></i></div>
+    <div class="panel-body">
+        <img ng-src="{{courses.selected.image}}" alt="{{courses.selected.name}}">
+        <div>
+            <label>Nome</label>
+            <input ng-model="courses.selected.name" placeholder="Nome" required>
+            <label>Programma</label>
+            <input ng-model="courses.selected.course" placeholder="Programma" required>
+            <br>
+            <label>Codice</label>
+            <input ng-model="courses.selected.code" required>
+            <br>
+            <label>Durata</label>
+            <input ng-model="courses.selected.duration">
+            <br>
+            <label>Crediti</label>
+            <input ng-model="courses.selected.credits">
+            <br>
+            <label>Costo</label>
+            <input ng-model="courses.selected.cost" placeholder="Gratuito">
+            <br>
+            <label>Descrizione</label>
+            <textarea ng-model="courses.selected.description"></textarea>
+            <br>
+            <label>Locandina</label>
+            <input id="course_image" type="file">
+            <br>
+        </div>
+        <h3>Struttura<i class="fa fa-plus" ng-click="courses.create('modules')"></i></h3>
+        <div ng-repeat="module in courses.selected.modules">
+            <input ng-model="module.street" placeholder="Nome" required />
+            <i class="fa fa-minus" ng-click="courses.delete('modules', $index)"></i>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button ng-click="courses.update()">Salva</button>
+        <button class="pull-right" ng-click="courses.delete()">Elimina</button>
+    </div>
+</form>
+</div>

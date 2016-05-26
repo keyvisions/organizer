@@ -1,0 +1,5 @@
+<ul class="list-group" style="width:15em">
+  <li data-type="{{option.subclass}}" ng-repeat="option in navigation.options" class="list-group-item active" ondragover="allowDrop(event)" ondrop="drop(event)" ng-click="toggle(event, option.class)">
+    <i class="fa {{option.icon}} fa-fw" aria-hidden="true"></i> {{option.name}}<span class="badge">{{navigation.db[option.class].length}}</span>
+  </li>
+</ul>

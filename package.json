@@ -1,0 +1,26 @@
+{
+    "name": "organizer",
+    "version": "0.1.0",
+    "description": "",
+    "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:keyvisions/organizer"
+    },
+    "dependencies": {
+        "mongodb": "~2.1.16"
+    },
+    "author": {
+        "name": "Giancarlo Trevisan",
+        "email": "g.trevisan@keyvisions.it"
+    },
+    "contributors": [{
+        "name": "Alberto Baldisserotto",
+        "email": "foo.bar@example.com"
+    }, {
+        "name": "Francesco Cappellari",
+        "email": "foo.bar@example.com"
+    }],
+    "license": "MIT",
+    "private": true
+}

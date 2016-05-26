@@ -1,0 +1,79 @@
+<div>
+    <h2><i class="fa fa-calendar-o"></i> {{events.name}}<i class="fa fa-plus" ng-click="events.create()"></i><i class="fa fa-calendar-o" ng-click="events.showAs = 'calendar'"></i><i class="fa fa-bars" ng-click="events.showAs = 'calendar'"></i></h2>
+    <div style="text-align:right"><input type="search" ng-model="events_search" placeholder="Cerca"></div>
+    <table class="table table-condensed" ng-show="events.showAs == 'calendar'">
+        <thead>
+            <tr>
+                <th>Lunedì</th>
+                <th>Martedì</th>
+                <th>Mercoledì</th>
+                <th>Venerdì</th>
+                <th>Sabato</th>
+                <th>Domenica</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-type="event" ng-repeat="event in events.data | filter: events_search | orderBy: 'name' track by event._id" draggable="true" ondragstart="drag(event)" id="{{event._id}}">
+                <td style="width:1em"><i ng-class="event.modules.length ? 'fa fa-code-fork' : 'fa fa-circle-thin'" ng-click="events.selected = event"></i></td>
+                <td>{{event.name}}</td>
+                <td>{{event.code}}</td>
+                <td>{{event.credits}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-condensed table-hover" ng-show="events.showAs == 'table'">
+      <thead>
+          <tr>
+              <th></th>
+              <th>Titolo</th>
+              <th>Luogo</th>
+              <th>Periodo</th>
+              <th>Partecipanti</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr data-type="event" ng-repeat="event in events.data | filter: events_search | orderBy: 'name' track by event._id" ng-draggable="true" ng-dragstart="event.drag(event)" id="{{event._id}}">
+          <td><i class="fa fa-calendar-o" ng-click="events.selected = event"></i><td>
+          <td>{{event.name}}</td>
+          <td></td>
+          <td></td>
+          <td>{{event.partecipants.length}}</td>
+      </tr>
+    </table>
+
+    <div class="collapse">{{events.selected}}</div>
+    <form class="panel panel-default" ng-show="events.selected" novalidate>
+      <div class="panel-heading"><i class="fa fa-calendar"></i> {{events.selected.name}}<i class="fa fa-close" ng-click="events.selected = null"></i></div>
+      <div class="panel-body">
+        <img class="pull-right" ng-src="{{events.selected.image}}" alt="{{events.selected.name}}">
+        <div>
+          <label>Tipo</label><select ng-model="events.selected.type"><option ng-repeat="option in schema.types" value="{{option.code}}">{{option.name}}</option></select><br>
+          <label>Periodo</label><br>
+          <label>Titolo</label><input ng-model="events.selected.name" placeholder="Titolo" required><br>
+          <label>Luogo</label><div ng-model="events.selected.location"></div><br>
+          <label>Note</label><textarea ng-model="events.selected.notes"></textarea><br>
+        </div>
+
+        <h3><i class="fa fa-group"></i> Partecipanti <span class="badge">{{events.selected.partecipants.length}}</span><i class="fa fa-plus" ng-click="events.select('partecipants')"></i></h3>
+        <table class="table table-condensed table-hover" ng-show="{{events.selected.partecipants.length}}">
+          <thead>
+            <tr><th></th><th>Nome</th><th>Ruolo</th><th>Conferma</th><th>Pasto</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="partecipant in events.selected.partecipants">
+              <td><i class="fa fa-user"></i></td>
+              <td>{{partecipant.name}}</td>
+              <td>{{partecipant.role}}</td>
+              <td>{{partecipant.confirms}}</td>
+              <td>{{partecipant.eats}}</td>
+              <td><i class="fa fa-minus" ng-click="events.delete('partecipants', $index)"></i></td>
+            </tr>
+        </table>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button ng-click="events.update()">Salva</button>
+        <button class="pull-right" ng-click="events.delete()">Elimina</button>
+      </div>
+    </div>
+</div>
